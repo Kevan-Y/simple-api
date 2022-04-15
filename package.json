@@ -1,11 +1,13 @@
 {
   "name": "simple-api",
   "version": "0.0.1",
+  "private": true,
   "description": "Simple API with full GitOps flow",
   "engines": {
     "node": ">=16",
     "pnpm": ">=6"
   },
+  "packageManager": "pnpm@6.32.4",
   "scripts": {
     "prettier": "prettier --write \"./**/*.{ts,js,yml,json}\"",
     "prettier-check": "prettier --check \"./**/*.{ts,js,yml,json}\"",
