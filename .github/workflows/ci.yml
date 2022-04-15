@@ -1,0 +1,75 @@
+name: ci
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    # Run Eslint
+    name: ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v2
+
+      - name: 🏗 Setup pnpm
+        uses: pnpm/action-setup@v2.2.1
+
+      - name: 🏗 Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: ✨ Run ESLint
+        run: pnpm lint
+
+  prettier:
+    name: Prettier
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v2
+
+      - name: 🏗 Setup pnpm
+        uses: pnpm/action-setup@v2.2.1
+
+      - name: 🏗 Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: ✨ Run Prettier-check
+        run: pnpm prettier-check
+
+  unit-tests:
+    # Run unit tests
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v2
+
+      - name: 🏗 Setup pnpm
+        uses: pnpm/action-setup@v2.2.1
+
+      - name: 🏗 Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'pnpm'
+
+      - name: ✨📦 Install dependencies and run tests
+        run: pnpm install-test
