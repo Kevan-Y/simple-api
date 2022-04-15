@@ -5,6 +5,7 @@ import pinoHttp from 'pino-http';
 
 import { logger } from './logger';
 import { router } from './routes';
+import { createErrorResponse } from './utils/response';
 
 const app = express();
 
@@ -17,18 +18,16 @@ app.use(cors());
 app.use('/', router);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-  next({
-    status: 'error',
-    error: {
-      code: 404,
-      message: 'Not Found',
-    },
-  });
+  logger.error(`Error not found request`);
+
+  next(createErrorResponse(404, 'Not found'));
 });
 
-app.use((err: any, req: Request, res: Response) => {
-  const status = err?.error?.code || 500;
-  const message = err?.error?.message || 'unable to process request';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  const status = err?.error?.code || err?.status || 500;
+  const message = err?.error?.message || err?.message || 'unable to process request';
+  logger.error(`here`);
 
   if (status > 499) {
     logger.error({ err }, `Error processing request`);
