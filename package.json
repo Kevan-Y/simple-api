@@ -2,17 +2,24 @@
   "name": "simple-api",
   "version": "0.0.1",
   "description": "Simple API with full GitOps flow",
-  "main": "index.js",
+  "engines": {
+    "node": ">=16",
+    "pnpm": ">=6"
+  },
   "scripts": {
     "prettier": "prettier --write \"./**/*.{ts,js,yml,json}\"",
     "prettier-check": "prettier --check \"./**/*.{ts,js,yml,json}\"",
-    "lint": "eslint --config .eslintrc.json src/** "
+    "lint": "eslint --config .eslintrc.json src/** ",
+    "dev": "cross-env LOG_LEVEL=debug nodemon --exec ts-node ./src/index.ts --watch src",
+    "start": "ts-node src/index.ts",
+    "build": "tsc -p .",
+    "preinstall": "npx only-allow pnpm"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Kevan-Y/simple-api.git"
   },
-  "author": "",
+  "author": "Kevan-Y & gregoris-io",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Kevan-Y/simple-api/issues"
