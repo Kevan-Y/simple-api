@@ -1,0 +1,51 @@
+on: [push]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    
+    - uses: azure/docker-login@v1
+      with:
+        login-server: simpleapi.azurecr.io
+        username: ${{ secrets.acr_simpleapi_username }}
+        password: ${{ secrets.acr_simpleapi_password }}
+    
+    - name: Build and push image to ACR
+      id: build-image
+      run: |
+        docker build . -t simpleapi.azurecr.io/democluster:${{ github.sha }}
+        docker push simpleapi.azurecr.io/democluster:${{ github.sha }}
+    
+    - uses: azure/k8s-set-context@v1
+      with:
+         kubeconfig: ${{ secrets.aks_democluster_kubeConfig }}
+      id: login
+    
+    - name: Create namespace
+      run: |
+        namespacePresent=`kubectl get namespace | grep demo-test | wc -l`
+        if [ $namespacePresent -eq 0 ]
+        then
+            echo `kubectl create namespace demo-test`
+        fi
+
+    - uses: azure/k8s-create-secret@v1
+      with:
+        namespace: demo-test
+        container-registry-url: simpleapi.azurecr.io
+        container-registry-username: ${{ secrets.acr_simpleapi_username }}
+        container-registry-password: ${{ secrets.acr_simpleapi_password }}
+        secret-name: democlusterdockerauth
+       
+    - uses: azure/k8s-deploy@v1.2
+      with:
+        namespace: demo-test
+        manifests: |
+          manifests/deployment.yml
+          manifests/service.yml
+          manifests/ingress.yml
+        images: |
+          simpleapi.azurecr.io/democluster:${{ github.sha }}
+        imagepullsecrets: |
+          democlusterdockerauth

@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: "democluster-e188"
+    labels:
+        app: "democluster-e188"
+    annotations:
+        kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+    rules:
+        - host: demo-test-democluster-e188.42f8560802ac479ba839.eastus.aksapp.io
+          http:
+            paths:
+            - path: /
+              backend:
+                serviceName: "democluster-e188"
+                servicePort: 9000
