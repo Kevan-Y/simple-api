@@ -14,7 +14,7 @@ jobs:
     - name: Build and push image to ACR
       id: build-image
       run: |
-        docker build "$GITHUB_WORKSPACE/." -f  "." -t simpleapi.azurecr.io/democluster:${{ github.sha }} --label dockerfile-path=.
+        docker build . -t simpleapi.azurecr.io/democluster:${{ github.sha }}
         docker push simpleapi.azurecr.io/democluster:${{ github.sha }}
     
     - uses: azure/k8s-set-context@v1
