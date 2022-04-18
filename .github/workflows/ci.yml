@@ -87,7 +87,8 @@ jobs:
           login-server: simpleapi.azurecr.io
           username: ${{ secrets.acr_simpleapi_username }}
           password: ${{ secrets.acr_simpleapi_password }}
-        name: Build and push image to ACR
+
+      - name: Build and push image to ACR
         id: build-image
         run: |
           docker build . -t simpleapi.azurecr.io/simpleapi:${{ github.sha }}
