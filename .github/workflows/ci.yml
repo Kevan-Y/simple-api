@@ -105,11 +105,11 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-    - name: Deploy to Azure Web App
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'simple-api-demo'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_1ea8c2eef46f49dea5b448f401664026 }}
-        images: 'simpleapi.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_630b80184b304875b8bb4a4da58ab8e2 }}/simpleapi:${{ github.sha }}'
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'simple-api-demo'
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_1ea8c2eef46f49dea5b448f401664026 }}
+          images: 'simpleapi.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_630b80184b304875b8bb4a4da58ab8e2 }}/simpleapi:${{ github.sha }}'
