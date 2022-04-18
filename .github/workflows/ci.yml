@@ -73,3 +73,30 @@ jobs:
 
       - name: ✨📦 Install dependencies and run tests
         run: pnpm install-test
+
+  deploy:
+    name: Deploy
+    needs: [lint, unit-tests, prettier]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v2
+
+      - uses: azure/docker-login@v1
+        with:
+          login-server: simpleapi.azurecr.io
+          username: ${{ secrets.acr_simpleapi_username }}
+          password: ${{ secrets.acr_simpleapi_password }}
+        name: Build and push image to ACR
+        id: build-image
+        run: |
+          docker build . -t simpleapi.azurecr.io/simpleapi:${{ github.sha }}
+          docker push simpleapi.azurecr.io/simpleapi:${{ github.sha }}
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'simple-api-demo'
+          slot-name: 'production'
+          images: 'simpleapi.azurecr.io/simpleapi:${{ github.sha }}'
