@@ -9,6 +9,6 @@ describe('/v1/ping', () => {
 
   test('Should return message with pong', async () => {
     const res = await request(app).get('/v1/ping');
-    expect(res.body.message).toEqual('pong');
+    expect(res.body.message).toEqual('pong1');
   });
 });
